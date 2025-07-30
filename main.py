@@ -4,14 +4,12 @@ import asyncio
 import nest_asyncio
 import re
 import os
-from telegram import Update, Bot
+from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
-from telegram.error import InvalidToken
 
 # --- Данные ---
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-ALLOWED_CHAT_ID = int(os.getenv("ALLOWED_CHAT_ID"))
 
 logging.basicConfig(level=logging.INFO)
 
@@ -63,11 +61,6 @@ def format_keywords(text):
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
     user_text = update.message.text.strip()
-
-    # Ограничение доступа
-    if chat_id != ALLOWED_CHAT_ID:
-        await update.message.reply_text("⛔ У вас нет доступа к этому боту.")
-        return
 
     # --- Управление режимами ---
     if user_text.lower() == "profbs admin":
